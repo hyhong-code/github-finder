@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { clearUsers, searchUsers } from "../../actions/githubActions";
 
-const Search = ({ clearResult, showClear, setAlert, searchUsers }) => {
+const Search = ({ clearUsers, searchUsers, github }) => {
   const [text, setText] = useState("");
 
   const handleChange = (evt) => {
@@ -10,9 +12,6 @@ const Search = ({ clearResult, showClear, setAlert, searchUsers }) => {
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    if (!text) {
-      return setAlert("Please enter something", "light");
-    }
     searchUsers(text);
     setText("");
   };
@@ -34,11 +33,11 @@ const Search = ({ clearResult, showClear, setAlert, searchUsers }) => {
           className="btn btn-dark btn-block"
         />
       </form>
-      {showClear && (
+      {github.users !== null && github.users.length > 0 && (
         <button
           className="btn btn-light btn-block"
           style={{ marginTop: "-0.6rem" }}
-          onClick={clearResult}
+          onClick={clearUsers}
         >
           Clear Results
         </button>
@@ -49,9 +48,12 @@ const Search = ({ clearResult, showClear, setAlert, searchUsers }) => {
 
 Search.propTypes = {
   searchUsers: PropTypes.func.isRequired,
-  setAlert: PropTypes.func.isRequired,
-  showClear: PropTypes.bool,
-  clearResult: PropTypes.func.isRequired,
+  github: PropTypes.object.isRequired,
+  clearUsers: PropTypes.func.isRequired,
 };
 
-export default Search;
+const mapStateToProps = ({ github }) => ({
+  github,
+});
+
+export default connect(mapStateToProps, { clearUsers, searchUsers })(Search);

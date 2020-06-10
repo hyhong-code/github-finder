@@ -1,9 +1,15 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import UserItem from "./UserItem";
 import PropTypes from "prop-types";
 import Spinner from "../Spinner";
+import { connect } from "react-redux";
+import { getUsers } from "../../actions/githubActions";
 
-const Users = ({ users, loading }) => {
+const Users = ({ github: { users }, loading, getUsers }) => {
+  useEffect(() => {
+    getUsers();
+  }, [getUsers]);
+
   return (
     <Fragment>
       {loading && <Spinner />}
@@ -21,7 +27,7 @@ const Users = ({ users, loading }) => {
 };
 
 Users.propTypes = {
-  users: PropTypes.array,
+  github: PropTypes.object.isRequired,
   lodaing: PropTypes.bool,
 };
 
@@ -31,4 +37,9 @@ const userStyle = {
   gridGap: "1rem",
 };
 
-export default Users;
+const mapStateToProps = ({ github, loading }) => ({
+  github,
+  loading,
+});
+
+export default connect(mapStateToProps, { getUsers })(Users);

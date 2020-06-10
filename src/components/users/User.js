@@ -3,24 +3,29 @@ import Spinner from "../Spinner";
 import Repos from "../repos/Repos";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { getUserInfo, getUserRepos } from "../../actions/githubActions";
+import { setLoading, unsetLoading } from "../../actions/loadingActions";
 
 export const User = ({
   loading,
-  user: {
-    name,
-    avatar_url,
-    location,
-    bio,
-    blog,
-    html_url,
-    followers,
-    following,
-    public_repos,
-    public_gists,
-    hireable,
-    company,
+  github: {
+    user: {
+      name,
+      avatar_url,
+      location,
+      bio,
+      blog,
+      html_url,
+      followers,
+      following,
+      public_repos,
+      public_gists,
+      hireable,
+      company,
+    },
+    repos,
   },
-  repos,
   getUserInfo,
   getUserRepos,
   match: {
@@ -29,14 +34,13 @@ export const User = ({
 }) => {
   useEffect(() => {
     getUserInfo(login);
+
     getUserRepos(login);
-  }, []);
+  }, [getUserInfo, getUserRepos, login]);
 
-  if (loading) {
-    return <Spinner />;
-  }
-
-  return (
+  return loading ? (
+    <Spinner />
+  ) : (
     <Fragment>
       <Link to="/" className="btn btn-light">
         Back to search
@@ -115,9 +119,18 @@ export const User = ({
 User.propTypes = {
   getUserInfo: PropTypes.func.isRequired,
   getUserRepos: PropTypes.func.isRequired,
-  loading: PropTypes.bool,
-  user: PropTypes.object.isRequired,
-  repos: PropTypes.array.isRequired,
+  loading: PropTypes.bool.isRequired,
+  github: PropTypes.object.isRequired,
 };
 
-export default User;
+const mapStateToProps = ({ github, loading }) => ({
+  github,
+  loading,
+});
+
+export default connect(mapStateToProps, {
+  getUserInfo,
+  getUserRepos,
+  setLoading,
+  unsetLoading,
+})(User);
