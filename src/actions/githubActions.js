@@ -9,11 +9,22 @@ import { setAlert, removeAlert } from "./alertAction";
 import { setLoading, unsetLoading } from "./loadingActions";
 import axios from "axios";
 
+let githubClientId;
+let githubClientSecret;
+
+if (process.env.NODE_ENV !== "production") {
+  githubClientId = process.env.REACT_APP_GITHUB_CLIENT_ID;
+  githubClientSecret = process.env.REACT_APP_GITHUB_CLIENT_SECRET;
+} else {
+  githubClientId = process.env.GITHUB_CLIENT_ID;
+  githubClientSecret = process.env.GITHUB_CLIENT_SECRET;
+}
+
 export const getUsers = () => async (dispatch) => {
   dispatch(setLoading());
   const resp = await axios.get(`https://api.github.com/users?client_id=
-    ${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=
-    ${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
+    ${githubClientId}&client_secret=
+    ${githubClientSecret}`);
 
   dispatch({
     type: GET_USERS,
@@ -33,8 +44,8 @@ export const searchUsers = (queryString) => async (dispatch) => {
 
     const resp = await axios.get(`https://api.github.com/search/users?q=
       ${queryString}&client_id=
-      ${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=
-      ${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
+      ${githubClientId}&client_secret=
+      ${githubClientSecret}`);
 
     dispatch({
       type: SEARCH_USERS,
@@ -47,8 +58,8 @@ export const searchUsers = (queryString) => async (dispatch) => {
 export const getUserInfo = (userName) => async (dispatch) => {
   dispatch(setLoading());
   const resp = await axios.get(`https://api.github.com/users/${userName}?client_id=
-    ${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=
-    ${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
+    ${githubClientId}&client_secret=
+    ${githubClientSecret}`);
 
   dispatch({
     type: GET_USER,
@@ -58,8 +69,8 @@ export const getUserInfo = (userName) => async (dispatch) => {
 
 export const getUserRepos = (userName) => async (dispatch) => {
   const resp = await axios.get(`https://api.github.com/users/${userName}/repos?per_page=5&sort=created:asc&client_id=
-    ${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=
-    ${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
+    ${githubClientId}&client_secret=
+    ${githubClientSecret}`);
 
   dispatch({
     type: GET_REPOS,

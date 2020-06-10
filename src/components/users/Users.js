@@ -13,7 +13,7 @@ const Users = ({ github: { users }, loading, getUsers }) => {
   return (
     <Fragment>
       {loading && <Spinner />}
-      {users !== null && (
+      {!loading && users !== null && (
         <div style={userStyle}>
           {users.map((user) => (
             <UserItem key={user.id} user={user}>
