@@ -37,7 +37,11 @@ class App extends Component {
       <div>
         <Navbar />
         <div className="container">
-          <Search searchUsers={this.searchUsers} />
+          <Search
+            searchUsers={this.searchUsers}
+            clearResult={() => this.setState({ users: [], loading: false })}
+            showClear={users && users.length > 0}
+          />
           <Users users={users} loading={loading} />
         </div>
       </div>

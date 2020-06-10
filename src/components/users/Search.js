@@ -19,6 +19,7 @@ class Search extends Component {
 
   render() {
     const { text } = this.state;
+    const { clearResult, showClear } = this.props;
 
     return (
       <div>
@@ -37,6 +38,15 @@ class Search extends Component {
             className="btn btn-dark btn-block"
           />
         </form>
+        {showClear && (
+          <button
+            className="btn btn-light btn-block"
+            style={{ marginTop: "-0.6rem" }}
+            onClick={clearResult}
+          >
+            Clear Results
+          </button>
+        )}
       </div>
     );
   }
