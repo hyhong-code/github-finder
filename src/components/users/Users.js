@@ -6,9 +6,8 @@ import Spinner from "../Spinner";
 const Users = ({ users, loading }) => {
   return (
     <Fragment>
-      {loading ? (
-        <Spinner />
-      ) : (
+      {loading && <Spinner />}
+      {users !== null && (
         <div style={userStyle}>
           {users.map((user) => (
             <UserItem key={user.id} user={user}>

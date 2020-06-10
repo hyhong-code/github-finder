@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 class Search extends Component {
   state = {
@@ -12,10 +13,13 @@ class Search extends Component {
 
   handleSubmit = (evt) => {
     evt.preventDefault();
+    this.props.searchUsers(this.state.text);
+    this.setState({ text: "" });
   };
 
   render() {
     const { text } = this.state;
+
     return (
       <div>
         <form className="form" onSubmit={this.handleSubmit}>
@@ -25,6 +29,7 @@ class Search extends Component {
             placeholder="Search users..."
             value={text}
             onChange={this.handleChange}
+            autoComplete="off"
           />
           <input
             type="submit"
@@ -36,5 +41,9 @@ class Search extends Component {
     );
   }
 }
+
+Search.propTypes = {
+  searchUsers: PropTypes.func.isRequired,
+};
 
 export default Search;
